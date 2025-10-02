@@ -1,0 +1,1 @@
+Joe replaces the control board, runs full diagnostics, and confirms the unit now starts and runs as expected. He performs an additional maintenance check to rule out any other issues.

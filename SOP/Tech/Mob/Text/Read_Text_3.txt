@@ -1,0 +1,1 @@
+The CSR verifies the generator’s serial number and checks the customer's contract status. Upon identifying the fault as a Level 2 issue, the CSR marks it as requiring on-site technician support.

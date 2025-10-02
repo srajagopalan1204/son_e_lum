@@ -1,0 +1,1 @@
+When the day begins at the service center, a customer call comes in reporting a fault code on their standby generator. The customer service representative (CSR) promptly answers and begins logging the issue into the system.

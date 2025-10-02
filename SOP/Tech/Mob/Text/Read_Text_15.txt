@@ -1,0 +1,1 @@
+An invoice is sent to the customer, with a copy routed to the billing department. Joe’s performance metrics for the call—response time, duration, and resolution—are logged for reporting.

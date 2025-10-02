@@ -1,0 +1,1 @@
+Lisa adds a note indicating the job is verified and customer is happy, and updates the job status to “Completed – Verified.” The service software then auto-generates a billing summary.
