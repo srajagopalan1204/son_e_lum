@@ -3,4 +3,4 @@ set -euo pipefail
 echo '[placeholder] Generating New/public (replace with real generator)'
 mkdir -p New/public
 rsync -a --delete New/site/templates/ New/public/ || true
-echo 'Done.'
+echo 'Done. Replace with your Hugo/MkDocs/Eleventy build.'
