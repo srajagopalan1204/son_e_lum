@@ -1,5 +1,5 @@
 # Workflow SRO (New/)
-**Purpose:** Describe how we change content, templates, and assets under `New/`.
+**Purpose:** How we change content, templates, and assets under `New/`.
 **Scope:** `son_e_lum/New/`
 **Owner:** <role/name> • **Last Reviewed:** YYYY-MM-DD
 
@@ -11,7 +11,4 @@
 5. Commit, PR, and merge.
 
 ## Rollback
-- Revert the merge commit or redeploy previous tag.
-
-## References
-- Central handbook in `khata_punji`.
+- Revert the merge or redeploy previous tag.
