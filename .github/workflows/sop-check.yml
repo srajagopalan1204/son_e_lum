@@ -1,0 +1,19 @@
+name: SOP check (New/)
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require SOP acknowledgement when New/ files change
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH")
+          touched=$(gh api repos/${{ github.repository }}/pulls/$PR/files --paginate | jq -r '.[].filename' | grep -E '^New/' || true)
+          if [ -n "$touched" ]; then
+            body=$(gh api repos/${{ github.repository }}/pulls/$PR -q '.body' || echo "")
+            echo "$body" | grep -qi '\[x\].*Website Build SOP' || { echo '::error::Please check the Website Build SOP (New/) checkbox in the PR body.'; exit 1; }
+          fi
