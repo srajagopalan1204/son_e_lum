@@ -1,0 +1,305 @@
+:: StoryTitle
+Tech Mobile SOP v10
+
+:: Story Stylesheet [stylesheet]
+/* style_v9.6b.css – compact inline layout, functional Back link (left) */
+body,html{
+  margin:0;padding:0;background:#0f1115;color:#e6e9ef;
+  font-family:system-ui,Segoe UI,Arial,sans-serif;}
+#ui-bar,#ui-bar-toggle{display:none!important;}
+#story{margin-left:0!important;width:100%!important;}
+*{margin-block-start:0;margin-block-end:0;box-sizing:border-box;}
+
+.wrapper{
+  display:flex;flex-direction:column;align-items:center;
+  max-width:1200px;margin:0 auto;padding:0.05rem 1rem;
+}
+h2.passage-title{
+  text-align:center;font-size:1.35rem;font-weight:700;
+  margin:0.05rem 0 0.1rem 0;color:#e6e9ef;
+}
+.img-block{display:block;margin:0 auto 0.1rem auto;}
+.img-block img{
+  display:block;margin:0 auto;width:95%;max-width:98%;
+  height:auto;border-radius:8px;border:1px solid #2a3040;object-fit:contain;
+}
+nav.crumbs{
+  margin:0.05rem 0;display:flex;justify-content:center;
+  gap:.25rem;flex-wrap:wrap;font-size:0.85rem;color:#aab1c2;
+}
+.nav-inline{font-size:0.8rem;color:#a0a6b3;}
+.choices-row{
+  margin:0.05rem 0;display:flex;justify-content:center;
+  align-items:center;flex-wrap:wrap;gap:0.25rem;
+}
+.decision-q{font-size:0.9rem;font-weight:700;margin-right:0.25rem;}
+.choices-multi a{
+  background:#1e3a8a;color:#fff;padding:0.25rem 0.45rem;
+  border-radius:6px;text-decoration:none;font-size:0.8rem;
+}
+.choices-multi a:hover{background:#3059c8;}
+.controls{
+  display:flex;justify-content:center;flex-wrap:wrap;
+  gap:.25rem;margin:0.05rem 0;
+}
+.controls a,.controls .btn,.link-back a{
+  background:#1e3a8a;color:#fff;padding:0.25rem 0.5rem;
+  border-radius:6px;text-decoration:none;font-size:0.8rem;cursor:pointer;
+  border:none;
+}
+.controls a:hover,.controls .btn:hover,.link-back a:hover{background:#3059c8;}
+.learn{margin:0.05rem 0 0.1rem 0;}
+.learn a{
+  color:#3ea6ff;font-weight:600;text-decoration:none;font-size:0.85rem;
+}
+.learn a:hover{text-decoration:underline;}
+.visually-hidden{display:none!important;}
+.link-back{display:inline-block;}
+
+
+:: Story Script [script]
+/* java_v9.6b.js – fully working SugarCube Back link + context visibility + TTS + modal */
+Config.passages.displayTitles = false;
+
+$(function() {
+
+  /* ===== Breadcrumbs ===== */
+  $(document).on(':passagedisplay', function() {
+    try {
+      const cur = State.passage;
+      if (/^(menu|start)$/i.test(cur)) State.variables.crumbs = ['Start'];
+      const c = State.variables.crumbs || [];
+      if (c[c.length - 1] !== cur) c.push(cur);
+      State.variables.crumbs = c.slice(-20);
+      $('#crumbs').text(State.variables.crumbs.join(' / '));
+
+      // Show/hide Back link contextually
+      if (/^(menu|start)$/i.test(cur)) {
+        $('.link-back').hide();
+      } else {
+        $('.link-back').show();
+      }
+    } catch (e) { console.warn('Breadcrumb error:', e); }
+  });
+
+  /* ===== Text-to-Speech ===== */
+  $(document).on('click', 'button[data-tts]', function() {
+    try {
+      const sel = $(this).attr('data-tts');
+      const node = document.querySelector(sel);
+      if (!node) return;
+      const text = (node.value || node.textContent || '').trim();
+      if (!text) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 1.0; u.pitch = 1.0;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch (e) { console.warn('TTS error:', e); }
+  });
+
+  /* ===== Read-More Modal ===== */
+  $(document).on('click', 'a[data-readsheet="1"]', function(e) {
+    e.preventDefault();
+    const url = this.href;
+    fetch(url, { cache: 'no-cache' })
+      .then(r => r.text())
+      .then(txt => {
+        Dialog.setup('Read more');
+        Dialog.wiki('<div class="read-modal"><button class="read-close">Close</button><pre></pre></div>');
+        $('.read-modal pre').text(txt);
+        Dialog.open();
+      })
+      .catch(() => window.open(url, '_blank'));
+  });
+  $(document).on('click', '.read-close', e => { e.preventDefault(); Dialog.close(); });
+});
+
+
+:: Menu
+This is the main entry point. Choose any process step below to begin.
+
+[[Start → M1]]
+[[Start → S1]]
+
+
+:: M1
+== ISM on Mobile (M1) ==
+This SOP covers the complete process of Palco/Scott Electric Tech Mobile operations. It starts with appointment acceptance, continues through travel, onsite service, material management, and ends with closure or callback. Technicians follow these standardized steps to ensure service accuracy and efficiency.
+
+'':'' https://scottuap.app/tech/ism
+
+
+[[Continue → S1]]
+
+:: S1
+== Accept Appointment (S1) ==
+After logging into ISM Tech Mobile, the technician checks all assigned calls. They select the next appointment and confirm acceptance, signaling readiness to travel to the customer site.
+
+'':'' https://scottuap.app/tech/appointment
+
+
+[[Continue → S2]]
+
+:: S2
+== Travel to Site (S2) ==
+The technician selects the appointment, clocks into Operation 20 (Labor–Travel), and drives to the customer site. Upon arrival, they clock out of travel and select the correct work code for generator type (Residential or Industrial).
+
+'':'' https://scottuap.app/tech/travel
+
+
+[[Continue → S3]]
+
+:: S3
+== Perform Site Work (S3) ==
+Technician clocks into Operation 10 (Parts–Service) and performs the required onsite work. They record materials by selecting 'Materials', checking consumed items, and clicking Done to ensure accurate parts tracking.
+
+'':'' https://scottuap.app/tech/service
+
+
+[[Continue → D1]]
+
+:: D1
+== Add Material Needed? (D1) ==
+During onsite work, the technician determines whether additional materials are required to complete the job. If yes, they proceed to add items (Y1). If not, they continue directly to Travel Leaving Site (N1).
+
+'''Should the technician add additional materials for this job?'''
+
+
+'':'' https://scottuap.app/tech/decision
+
+
+[[Continue → Y1]]
+[[Continue → N1]]
+
+:: Y1
+== Yes Add Material (Y1) ==
+The technician opens the Add Material section to record additional parts needed for the service call. These items are added to the SRO for later billing or inventory adjustments.
+
+'':'' https://scottuap.app/tech/materials
+
+
+[[Continue → S4]]
+
+:: N1
+== No Add Material Needed (N1) ==
+No additional items are needed. Technician skips Add Material and proceeds to Travel Leaving Site (S5).
+
+'':'' https://scottuap.app/tech/materials
+
+
+[[Continue → S5]]
+
+:: S4
+== Add Material (S4) ==
+Technician selects '+ Planned' to add a material not listed on the original SRO. After searching for the item, they enter the quantity needed and avoid changing cost or price fields. Added items are sent to back-office review.
+
+'':'' https://scottuap.app/tech/materials
+
+
+[[Continue → S5]]
+
+:: S5
+== Travel Leaving Site (S5) ==
+After completing onsite work, technician clocks into Operation 20 (Travel–Return). On arrival at the shop or next appointment, they clock out and verify travel time was properly logged.
+
+'':'' https://scottuap.app/tech/return
+
+
+[[Continue → D2]]
+
+:: D2
+== Add Work Needed? (D2) ==
+At the end of the job, technician evaluates whether any additional work is needed. If yes, they proceed to Additional Work (Y2). If not, they move directly to closing the appointment (N2).
+
+'''Is extra work needed during this visit?'''
+
+
+'':'' https://scottuap.app/tech/decision
+
+
+[[Continue → Y2]]
+[[Continue → N2]]
+
+:: Y2
+== Yes Additional Work (Y2) ==
+Technician identifies additional work and evaluates if it can be done immediately.
+
+'':'' https://scottuap.app/tech/decision
+
+
+[[Continue → D3]]
+
+:: N2
+== No Additional Work (N2) ==
+No additional work is required. Technician closes the SRO following standard close-out procedure.
+
+'':'' https://scottuap.app/tech/decision
+
+
+[[Continue → S8]]
+
+:: D3
+== Can Work Be Completed During Visit? (D3) ==
+Technician evaluates if the newly identified task can be finished during the current visit. If yes, they create an SRO and complete it (Y3). If not, they flag it for callback (N3).
+
+'''Can the additional work be completed during this visit?'''
+
+
+'':'' https://scottuap.app/tech/decision
+
+
+[[Continue → Y3]]
+[[Continue → N3]]
+
+:: Y3
+== Yes Work Can Be Completed (Y3) ==
+Technician generates a new SRO to capture the additional work and completes it during the same visit, logging all labor and parts used.
+
+'':'' https://scottuap.app/tech/sro
+
+
+[[Continue → S6]]
+
+:: N3
+== No Work Cannot Be Completed (N3) ==
+Technician identifies that the additional work cannot be completed now and flags the SRO for callback scheduling.
+
+'':'' https://scottuap.app/tech/callback
+
+
+[[Continue → S7]]
+
+:: S6
+== Create SRO (S6) ==
+While on site, technician discovers additional repair opportunities and creates a new SRO to document and perform them during the same visit.
+
+'':'' https://scottuap.app/tech/sro
+
+
+[[Continue → S8]]
+
+:: S7
+== Change Status to Callback (S7) ==
+If return service is required, technician changes status to 'On Hold' and adds a note specifying what work remains.
+
+'':'' https://scottuap.app/tech/callback
+
+
+[[Continue → EXIT]]
+
+:: S8
+== Change Status to Closed (S8) ==
+After verifying all materials and labor are logged, technician sets SRO status to Closed. Appointment disappears from mobile queue.
+
+'':'' https://scottuap.app/tech/close
+
+
+[[Continue → EXIT]]
+
+:: EXIT
+== End of SOP (EXIT) ==
+All work completed or deferred. Tech Mobile SOP process ends here.
+
+'':'' https://scottuap.app/tech/end
+
+
+[[Exit → EXIT]]

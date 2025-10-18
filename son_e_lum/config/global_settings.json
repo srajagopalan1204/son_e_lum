@@ -1,0 +1,50 @@
+{
+  "version": "v10",
+  "date": "2025-10-18T11:30-04:00",
+  "provenance": {
+    "developed_by": "ChatGPT Collaborative Tools (Consultant)",
+    "coauthor": "Subi Rajagopalan (for Scott Electric)",
+    "adapted_for": "Scott Electric ERP Training — Son et Lumière Interactive SOP Series",
+    "origin": "EduXL (2000–2005 Foundation Work)"
+  },
+  "url_roots": {
+    "legacy": "https://srajagopalan1204.github.io/son_e_lum/legacy/",
+    "staging": "https://srajagopalan1204.github.io/son_e_lum/staging/",
+    "integration": "https://srajagopalan1204.github.io/son_e_lum/integration/",
+    "production": "https://srajagopalan1204.github.io/son_e_lum/"
+  },
+  "narration_rules": {
+    "hear_it": ["Body1", "Body3"],
+    "read_more": ["Body2", "Body3"],
+    "show_text": true,
+    "enable_audio": false
+  },
+  "question_overrides": {
+    "D1": "Should the technician add additional materials for this job?",
+    "D2": "Is extra work needed during this visit?",
+    "D3": "Can the additional work be completed during this visit?"
+  },
+  "sop_overrides": {
+    "Tech_Mobile": {
+      "question_overrides": {
+        "D1": "Should the technician add additional materials for this job?",
+        "D2": "Is extra work needed during this visit?",
+        "D3": "Can the additional work be completed during this visit?"
+      },
+      "exit_text": {
+        "Body1": "You have completed this SOP path. Use Back to review or select Menu to start a new SOP.",
+        "Body3": "Having used this path (shown in your breadcrumb), you may step back to review or return to Menu to start fresh. Exiting clears the breadcrumb history."
+      }
+    }
+  },
+  "images": {
+    "auto_caption": true,
+    "default_folder": "images/TECH/",
+    "extension": ".png"
+  },
+  "output": {
+    "timestamp": true,
+    "theme": "default"
+  },
+  "notes": "Hybrid decision system: auto-generate questions when multiple Next paths exist; allow JSON overrides without editing CSV. Legacy lineage: EduXL → Son et Lumière."
+}
