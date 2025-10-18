@@ -51,3 +51,60 @@ nav.crumbs{
 .learn a:hover{text-decoration:underline;}
 .visually-hidden{display:none!important;}
 .link-back{display:inline-block;}
+/* ===== Compact spacing overrides ===== */
+
+/* Global line-height a bit tighter */
+body, .passage {
+  line-height: 1.25; /* default is ~1.4–1.6 */
+}
+
+/* Headings: reduce bottom margin */
+.passage-title, h1, h2, h3 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.4rem;
+}
+
+/* Paragraphs & generic blocks inside the wrapper */
+.wrapper p,
+.wrapper .text,
+.wrapper .learn,
+.wrapper .choices-row,
+.wrapper .controls {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Breadcrumb row */
+nav.crumbs {
+  margin: 0.25rem 0 0.45rem;
+  font-size: 0.95rem;
+}
+
+/* Buttons row spacing */
+.wrapper .controls .btn,
+.wrapper .controls a.btn,
+.wrapper .controls button.btn {
+  margin: 0.15rem 0.25rem 0.15rem 0; /* tighten gaps between buttons */
+  padding: 0.35rem 0.6rem;           /* slightly slimmer buttons */
+}
+
+/* Choice links (inline) */
+.choices-row a.internal {
+  margin-right: 0.4rem;
+}
+
+/* Image block: keep tight but with a little breathing room */
+.img-block {
+  margin: 0.4rem 0 0.6rem;
+}
+.img-block img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Optional: slightly smaller base font to reduce vertical flow */
+body {
+  font-size: 15px;   /* was likely 16px; adjust to taste */
+}
