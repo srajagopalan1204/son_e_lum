@@ -1,22 +1,21 @@
-/* java_v9.6d.js — minimal helpers for Tech Mobile v9.6d
-   - TTS for buttons with data-tts
-   - Breadcrumb fallback that only runs if #crumbs is empty
-   Assumes SugarCube 2.x is present (Twine format). */
+/* java_v9.6d.js — helpers for Tech Mobile v9.6d (SugarCube 2.x)
+   Features:
+   - TTS for buttons/links with data-tts="#textareaOrDivId"
+   - Path-based breadcrumbs that REWIND history (Engine.go(-N)) on click
+   - Rebuild breadcrumbs on each :passagedisplay
+*/
 
 (function () {
   'use strict';
 
-  // ---- Tiny utilities ----
+  // ---------- Utilities ----------
   function speak(text) {
     try {
       if (!text) return;
-      // Stop any current speech, then speak new text
       if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
         var u = new SpeechSynthesisUtterance(text);
         window.speechSynthesis.speak(u);
-      } else {
-        console.warn("Speech Synthesis API not available in this browser.");
       }
     } catch (e) {
       console.warn("TTS failed:", e);
@@ -36,77 +35,78 @@
     });
   }
 
-  // ---- Breadcrumb fallback (only if #crumbs is empty) ----
-  function renderCrumbsFallback() {
-    // Find nav#crumbs in the *current* passage
+  // ---------- TTS wiring ----------
+  function wireTTS(ev) {
+    var root = (ev && ev.content) ? ev.content : document;
+    onClick(root, "[data-tts]", function (btn) {
+      var sel = btn.getAttribute("data-tts");
+      var ta  = bySel(root, sel);
+      var txt = ta ? (ta.value || ta.textContent) : "";
+      speak(txt);
+    });
+  }
+
+  // ---------- Breadcrumbs (rewind) ----------
+  // Render a path-based breadcrumb that trims future history when clicking older crumbs.
+  function renderCrumbs() {
     var nav = document.querySelector("nav#crumbs");
     if (!nav) return;
-    // If something already rendered breadcrumbs, do nothing
-    if (nav.innerHTML && nav.innerHTML.trim()) return;
 
     try {
       var hist = (window.State && window.State.history) ? window.State.history : null;
       if (!hist || !hist.length) return;
 
-      // Build a simple trail: [Start] › [S1] › [Current]
-      var parts = hist.map(function (step, i) {
-        var title = (step && step.title) ? String(step.title) : "";
-        if (!title) return "";
-        // Link all but the last (current) passage
-        if (i < hist.length - 1) {
-          var safe = title.replace(/"/g, '&quot;');
-          // Use SugarCube link/goto so it navigates properly
-          return '<<link "' + safe + '">><<goto "' + safe + '">><</link>>';
-        } else {
-          // Current passage (not a link)
-          var safeHTML = title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-          return '<span class="here">' + safeHTML + '</span>';
+      // (Optional) keep the last N steps for readability; uncomment to enable:
+      // hist = hist.slice(-8);
+
+      var last = hist.length - 1;
+      var parts = hist.map(function (m, i) {
+        var t = (m && m.title) ? String(m.title) : "";
+        if (!t) return "";
+
+        // Current page is not clickable
+        if (i === last) {
+          var here = t.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          return '<span class="here">' + here + '</span>';
         }
+
+        // Rewind N steps to go to this crumb, trimming history
+        var steps = last - i; // positive integer
+        var safe  = t.replace(/"/g, '&quot;');
+        return '<<link "' + safe + '">><<run Engine.go(-' + steps + ')>><</link>>';
       }).filter(Boolean);
 
       if (!parts.length) return;
+
+      // Clear and wikify so SugarCube macros render
       nav.innerHTML = "";
-      // Wikify into the nav so SugarCube macros render
       if (typeof window.Wikifier === "function") {
         new window.Wikifier(nav, parts.join(" › "));
       } else {
-        // Fallback: plain text if Wikifier missing (very unlikely in SugarCube)
+        // Very unlikely fallback
         nav.textContent = parts.join(" > ").replace(/<<.*?>>/g, "");
       }
     } catch (e) {
-      console.warn("Breadcrumb fallback failed:", e);
+      console.warn("crumb render failed:", e);
     }
   }
 
-  // ---- Passage wiring ----
-  // SugarCube triggers jQuery events; if jQuery is not present, SugarCube still fires them.
-  // We defensively hook both jQuery and DOM in case of custom setups.
-  function bindPassageHandlers() {
-    // For TTS buttons
-    document.addEventListener(":passagedisplay", function (ev) {
-      var root = ev.content || document;
-      onClick(root, "button[data-tts]", function (btn) {
-        var sel = btn.getAttribute("data-tts");
-        var ta  = bySel(root, sel);
-        var txt = ta ? (ta.value || ta.textContent) : "";
-        speak(txt);
-      });
-    });
+  // ---------- Hook into SugarCube lifecycle ----------
+  // SugarCube fires jQuery-style events; we listen on both DOM and jQuery for robustness.
+  document.addEventListener(":passagedisplay", function (ev) {
+    // TTS delegation
+    wireTTS(ev);
+    // Rebuild crumbs after everything else has a chance to run
+    setTimeout(renderCrumbs, 0);
+  });
 
-    // Render crumbs after each passage; give other scripts a tick to populate first.
-    document.addEventListener(":passagedisplay", function () {
-      setTimeout(renderCrumbsFallback, 0);
+  if (window.jQuery) {
+    window.jQuery(document).on(":passagedisplay", function (ev) {
+      // Duplicate-safe: setTimeout prevents double-render issues
+      setTimeout(renderCrumbs, 0);
     });
-
-    // If jQuery is present (SugarCube usually bundles it), also attach via jQuery to be extra safe
-    if (window.jQuery) {
-      window.jQuery(document).on(":passagedisplay", function (ev) {
-        // duplicate-safe; setTimeout guard prevents double-render issues
-        setTimeout(renderCrumbsFallback, 0);
-      });
-    }
   }
 
-  // Initialize immediately (SugarCube loads scripts before first passage render)
-  bindPassageHandlers();
+  // Optional: expose helpers (debug)
+  window._tech_v96d = { speak: speak, renderCrumbs: renderCrumbs };
 })();
