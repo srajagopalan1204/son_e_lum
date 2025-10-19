@@ -108,3 +108,35 @@ nav.crumbs {
 body {
   font-size: 15px;   /* was likely 16px; adjust to taste */
 }
+/* ===== Compact spacing & UAP row tweaks for v9.6d ===== */
+body, .passage { line-height: 1.25; }
+
+.passage-title, h1, h2, h3 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.45rem;
+}
+
+.wrapper p,
+.wrapper .text,
+.wrapper .learn,
+.wrapper .choices-row,
+.wrapper .controls,
+nav.crumbs {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.wrapper .controls .btn,
+.wrapper .controls a.btn,
+.wrapper .controls button.btn {
+  margin: 0.12rem 0.25rem 0.12rem 0;
+  padding: 0.34rem 0.58rem;
+}
+
+/* Put UAP on its own line with a small emphasis */
+.controls-uap { margin-top: 0.35rem; margin-bottom: 0.25rem; }
+.controls-uap .uap-btn { font-weight: 600; }
+
+/* Keep "Read more" blocks hidden until toggled */
+.body-block[hidden] { display: none; }
+.visually-hidden { position:absolute; left:-10000px; width:1px; height:1px; }
