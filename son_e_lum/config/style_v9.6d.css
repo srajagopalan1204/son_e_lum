@@ -140,3 +140,15 @@ nav.crumbs {
 /* Keep "Read more" blocks hidden until toggled */
 .body-block[hidden] { display: none; }
 .visually-hidden { position:absolute; left:-10000px; width:1px; height:1px; }
+/* Ensure crumbs render and spacing stays tight */
+nav.crumbs { display:block; margin: 0.3rem 0 0.4rem; font-size: .95rem; }
+nav.crumbs .here { font-weight: 600; }
+
+/* Controls spacing + UAP line */
+.wrapper .controls { margin: 0.35rem 0; }
+.controls-uap { margin-top: 0.35rem; margin-bottom: 0.25rem; }
+.controls-uap .uap-btn { font-weight: 600; }
+
+/* Read-more sources remain hidden */
+.body-block[hidden] { display: none; }
+.visually-hidden { position:absolute; left:-10000px; width:1px; height:1px; }
