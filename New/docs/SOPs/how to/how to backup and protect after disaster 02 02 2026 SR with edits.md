@@ -37,7 +37,20 @@ Run these three commands:
 git add -A
 git commit -m "WIP savepoint 20260301_0830"
 git push
-
+ results 
+ 
+[main dd9e3c2] WIP savepoint 20260301_0830
+ 1 file changed, 152 insertions(+)
+ create mode 100644 New/docs/SOPs/how to/how to backup and protect after disaster 02 02 2026 SR with edits.md
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (7/7), 2.15 KiB | 1.08 MiB/s, done.
+Total 7 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/srajagopalan1204/son_e_lum
+   8578796..dd9e3c2  main -> main
 What this does:
 
 add -A = include all changes (new/edited/deleted)
